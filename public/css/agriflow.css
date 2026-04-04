@@ -377,9 +377,41 @@ body {
     border-color: #4caf50;
 }
 
+.risk-card.risk-low .risk-emoji {
+    color: #2e7d32;
+}
+
+.risk-card.risk-low .risk-title {
+    color: #1b5e20 !important;
+}
+
+.risk-card.risk-low .risk-explanation p {
+    color: #1b5e20;
+}
+
+.risk-card.risk-low .risk-score {
+    color: #1b5e20 !important;
+}
+
 .risk-card.risk-medium {
     background: #fff3e0;
     border-color: #ffa726;
+}
+
+.risk-card.risk-medium .risk-emoji {
+    color: #e65100;
+}
+
+.risk-card.risk-medium .risk-title {
+    color: #bf360c !important;
+}
+
+.risk-card.risk-medium .risk-explanation p {
+    color: #bf360c;
+}
+
+.risk-card.risk-medium .risk-score {
+    color: #bf360c !important;
 }
 
 .risk-card.risk-high {
@@ -387,27 +419,20 @@ body {
     border-color: #ef5350;
 }
 
-.risk-emoji {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-}
-
-.risk-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
-.risk-card.risk-low .risk-title {
-    color: #2e7d32;
-}
-
-.risk-card.risk-medium .risk-title {
-    color: #e65100;
+.risk-card.risk-high .risk-emoji {
+    color: #b71c1c;
 }
 
 .risk-card.risk-high .risk-title {
+    color: #c62828 !important;
+}
+
+.risk-card.risk-high .risk-explanation p {
     color: #c62828;
+}
+
+.risk-card.risk-high .risk-score {
+    color: #c62828 !important;
 }
 
 .risk-score {

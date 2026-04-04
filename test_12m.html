@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Loan Plan - AgriFlow</title>
+    <link rel="stylesheet" href="/css/agriflow.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+  <a href="/agriflow" class="navbar-brand">
+    <span>🌾</span>
+    <h1>AgriFlow</h1>
+  </a>
+
+  <div class="navbar-links">
+    <a href="/agriflow">🏠 Home</a>
+    <a href="/agriflow/monthly-income"
+      style="color: white; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease;">💰
+      My Income</a>
+    <a href="/agriflow/weather"
+      style="color: white; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease;">🌤️
+      Weather</a>
+    <a href="/agriflow/chat"
+      style="color: white; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease;">🤖
+      AI Chat</a>
+    <a href="/agriflow/apply" class="btn-apply-nav">📋 Apply Now</a>
+  </div>
+</nav>
+
+        <!-- Result Container -->
+        <section class="result-container">
+
+            <!-- ===== SECTION 1: GREETING CARD ===== -->
+            <div class="greeting-card fade-in">
+                <h2>👋 नमस्ते, Test!</h2>
+                <div class="farmer-details">
+                    <p>🌾 फसल: <strong>
+                            ???
+                        </strong>&nbsp;&nbsp;&nbsp; 🏡 भूमि: <strong>
+                            5 एकड़
+                        </strong></p>
+                    <p>💳 ऋण: <strong>₹1,50,000</strong>&nbsp;&nbsp;&nbsp; ⏱️ अवधि: <strong>
+                            12 months
+                        </strong></p>
+                    <p>📍 जिला: <strong>
+                            CG
+                        </strong></p>
+                </div>
+            </div>
+
+            <!-- ===== SECTION 2: RISK CARD (MOST IMPORTANT) ===== -->
+            <div class="risk-card fade-in risk-high">
+                <div class="risk-emoji">
+                    ⚠️
+                </div>
+                <h3 class="risk-title">आपका जोखिम स्तर / Your Risk Level: <strong>
+                        High
+                    </strong></h3>
+
+                <div class="risk-score">
+                    68 / 100
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 68%;"></div>
+                </div>
+
+                <div class="risk-explanation">
+                    
+                                <p>⚠️ उच्च जोखिम! कृपया किसी वित्तीय सलाहकार से बात करें। / High risk. Please talk to a
+                                    financial advisor first.</p>
+                                
+                </div>
+
+                <hr style="margin: 1.5rem 0; border: none; border-top: 2px solid rgba(255,255,255,0.2);">
+
+                <!-- Risk Breakdown -->
+                <div
+                    style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.75rem; margin-top: 1rem;">
+                    <h4 style="color: white; margin-bottom: 1rem;">📊 जोखिम की गणना / Risk Calculation Breakdown:</h4>
+
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; color: white; font-size: 0.95rem;">
+                        <!-- Factor 1: EMI Burden (Most Important) -->
+                        <div
+                            style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #ff6b6b;">
+                            <p><strong>⚠️ EMI का बोझ / EMI Burden (सबसे महत्वपूर्ण)</strong></p>
+                            <p style="margin: 0.5rem 0; font-size: 1rem;">
+                                <strong>बदतर महीना / Worst Month:</strong> <span style="color: #ffeb3b;">
+                                    180%
+                                </span>
+                            </p>
+                            <p style="margin: 0.5rem 0;">
+                                <strong>औसत / Average:</strong>
+                                72%
+                            </p>
+                            <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.9;">
+                                <small>
+                                    
+                                        ❌ बहुत ज्यादा / Too high - 12 months में भी उच्च
+                                            
+                                </small>
+                            </p>
+                        </div>
+
+                        <!-- Factor 2: Loan-to-Land Ratio -->
+                        <div
+                            style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #4ecdc4;">
+                            <p><strong>🏡 ऋण-भूमि अनुपात / Loan-to-Land Ratio</strong></p>
+                            <p style="margin: 0.5rem 0; font-size: 1rem; color: #4ecdc4;">
+                                <strong>₹30,000/एकड़</strong>
+                            </p>
+                            <p style="margin: 0.5rem 0; color: #90ee90;">
+                                <strong>मासिक EMI:</strong> ₹12,500
+                            </p>
+                            <p style="margin-top: 0.5rem; font-size: 0.85rem; color: #fff; opacity: 0.9;">
+                                <small>अवधी में 12 महीने = कम जोखिम<br>Duration: 12 months = Lower Risk</small>
+                            </p>
+                        </div>
+
+                        <!-- Income Details -->
+                        <div
+                            style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #95e1d3;">
+                            <p><strong>💰 आय विवरण / Income Details</strong></p>
+                            <p style="margin: 0.5rem 0; color: #95e1d3;">
+                                <strong>औसत आय:</strong> ₹17,191
+                            </p>
+                            <p style="margin: 0.5rem 0; color: #ffeb3b;">
+                                <strong>न्यूनतम आय:</strong> ₹6,911
+                            </p>
+                        </div>
+
+                        <!-- Risk Level Guide -->
+                        <div
+                            style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #a8dadc;">
+                            <p><strong>📈 जोखिम स्तर / Risk Levels</strong></p>
+                            <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #fff;">
+                                ✅ कम (0-40) | ⚡ माध्यम (40-65) | ⚠️ उच्च (65-100)
+                            </p>
+                            <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #fff;">
+                                <strong>आपका स्कोर:</strong> <span style="color: #ffeb3b; font-size: 1.1rem;">
+                                    68
+                                </span>/100 (High)
+                            </p>
+                            <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #c8e6c9; font-style: italic;">
+                                💡 अधिक महीने = कम जोखिम / More months = Lower risk
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION 3.5: EMI EXPLANATION ===== -->
+            <div class="info-card fade-in"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; grid-column: 1/4; padding: 2rem;">
+                <h3 style="color: white; margin-bottom: 1rem;">📊 कैसे EMI की गणना की गई है? / How is EMI Calculated?
+                </h3>
+                <div style="font-size: 1.1rem; line-height: 1.8;">
+                    <p><strong>सूत्र / Formula:</strong></p>
+                    <p
+                        style="background: rgba(255,255,255,0.15); padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; border-left: 4px solid #ffeb3b;">
+                        <strong>EMI = कुल ऋण ÷ महीनों की संख्या</strong><br>
+                        EMI = ₹1,50,000 ÷ 12 महीने = <strong
+                                    style="font-size: 1.3rem; color: #ffeb3b;">₹12,500/महीना</strong>
+                    </p>
+                    <p style="margin-top: 1rem;"><strong>मुख्य जानकारी / Key Information:</strong></p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>कुल राशि (मूल + ब्याज) / Total (Principal + Interest): <strong style="color: #c8e6c9;">₹1,65,000</strong></li>
+                        <li>अनुमानित ब्याज (10% p.a.) / Estimated Interest: <strong style="color: #c8e6c9;">₹15,000</strong></li>
+                        <li>अवधि लाभ / Duration Benefit: <strong style="color: #90ee90;">
+                                100% छूट = कम जोखिम
+                            </strong></li>
+                        <li>प्रतिशत = (EMI ÷ आपकी आय) × 100 / Percentage = (EMI ÷ Your Income) × 100</li>
+                    </ul>
+                    <div
+                        style="background: rgba(144, 238, 144, 0.1); padding: 1rem; margin-top: 1rem; border-radius: 0.5rem; border-left: 4px solid #90ee90;">
+                        <p style="margin: 0; font-size: 0.95rem; color: #c8e6c9;">
+                            💡 <strong>टिप्पणी:</strong> लंबी अवधि के ऋण सुरक्षित हैं - 36 महीने तक 40% जोखिम में कमी
+                            पाएँ!
+                            <br>
+                            <strong>Note:</strong> Longer loans are safer - Get up to 40% risk reduction for 36 months!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION 3.6: INFO CARDS REPEATED (IF NEEDED) ===== -->
+
+            <!-- ===== SECTION 4: INCOME CHART ===== -->
+            <div class="chart-container fade-in" data-income-months="[6911,9384,12413,17624,19040,22538,24440,23782,21041,20221,16751,12149]">
+                <h3 class="chart-title">💰 आपकी अपेक्षित आय - महीना दर महीना / Your Expected Income - Month by Month
+                </h3>
+                <canvas id="incomeChart"></canvas>
+            </div>
+
+            <!-- ===== SECTION 5: EMI TABLE ===== -->
+            <div class="emi-table-container fade-in">
+                <h3 class="emi-table-title">📅 आपकी EMI योजना / Your EMI Plan
+                    <span style="color: #667eea; font-size: 0.9rem;">(12 Months - 100% Safe)</span>
+                </h3>
+                <p style="color: #666; font-size: 0.95rem; margin-bottom: 1rem;">
+                    ✅ 12-महीने की अवधि में कम जोखिम / 12-month loan
+                            reduces risk by 100%<br>
+                                ✅ यह तालिका आपके 12 महीने की ऋण अवधि के लिए EMI दिखाती है।
+                </p>
+                <table class="emi-table">
+                    <thead>
+                        <tr>
+                            <th>महीना / Month</th>
+                            <th>आपकी आय / Income</th>
+                            <th>EMI दर / EMI to Pay</th>
+                            <th>प्रतिशत / %</th>
+                            <th>स्थिति / Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr>
+                                <td><strong>
+                                        Jan (Month 1)
+                                    </strong></td>
+                                <td>₹6,911
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    180%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>
+                                        Feb (Month 2)
+                                    </strong></td>
+                                <td>₹9,384
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    133%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>
+                                        Mar (Month 3)
+                                    </strong></td>
+                                <td>₹12,413
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    100%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>
+                                        Apr (Month 4)
+                                    </strong></td>
+                                <td>₹17,624
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    70%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>
+                                        May (Month 5)
+                                    </strong></td>
+                                <td>₹19,040
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    65%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>
+                                        Jun (Month 6)
+                                    </strong></td>
+                                <td>₹22,538
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    55%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>
+                                        Jul (Month 7)
+                                    </strong></td>
+                                <td>₹24,440
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    51%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>
+                                        Aug (Month 8)
+                                    </strong></td>
+                                <td>₹23,782
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    52%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>
+                                        Sep (Month 9)
+                                    </strong></td>
+                                <td>₹21,041
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    59%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>
+                                        Oct (Month 10)
+                                    </strong></td>
+                                <td>₹20,221
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    61%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>
+                                        Nov (Month 11)
+                                    </strong></td>
+                                <td>₹16,751
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    74%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>
+                                        Dec (Month 12)
+                                    </strong></td>
+                                <td>₹12,149
+                                </td>
+                                <td>₹12,500
+                                </td>
+                                <td>
+                                    102%
+                                </td>
+                                <td>
+                                    
+                                                <span class="emi-status-high">⚠️ उच्च / High</span>
+                                                
+                                </td>
+                            </tr>
+                            
+                                
+                    </tbody>
+                </table>
+                <div
+                    style="background: #f9f9f9; padding: 1.5rem; margin-top: 1rem; border-radius: 0.75rem; border-left: 4px solid #4caf50;">
+                    <p style="margin: 0 0 0.75rem 0; font-size: 0.95rem; color: #1b5e20;"><strong>💡 सुरक्षा के नियम /
+                            Safety Rules:</strong></p>
+                    <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #2e7d32;">✅ EMI आपकी आय का <strong>30% से
+                            कम</strong> होना चाहिए। / EMI should be <strong>less than 30%</strong> of your income.</p>
+                    <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #d32f2f;">❌ यदि EMI <strong>40% से
+                            अधिक</strong> है, तो यह जोखिम भरा है। / If EMI is <strong>more than 40%</strong>, it's
+                        risky.</p>
+                    <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #f57c00;">⚡ <strong>30-40%</strong> के बीच
+                        सावधानी बरतें। / Between 30-40%, proceed with caution.</p>
+                </div>
+            </div>
+
+            <!-- ===== SECTION 6: TIPS FOR FARMER ===== -->
+            <div class="tips-section fade-in">
+                <h2 class="tips-title">💡 आपके लिए सुझाव / Our Suggestions for You</h2>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <div class="tip-icon">🌧️</div>
+                        <div class="tip-text">बारिश के मौसम से पहले फसल बीमा कराएँ / Get crop insurance before rainy
+                            season</div>
+                    </div>
+
+                    <div class="tip-card">
+                        <div class="tip-icon">📦</div>
+                        <div class="tip-text">गेहूं को मार्च में बेचें, ज्यादा कीमत मिलेगी / Sell wheat in March for
+                            better price</div>
+                    </div>
+
+                    <div class="tip-card">
+                        <div class="tip-icon">💧</div>
+                        <div class="tip-text">ड्रिप सिंचाई से पानी बचाएँ 40% तक / Drip irrigation saves 40% water</div>
+                    </div>
+
+                    <div class="tip-card">
+                        <div class="tip-icon">💪</div>
+                        <div class="tip-text">समय पर EMI दें, अपना स्कोर सुधारें / Pay EMI on time to improve credit
+                        </div>
+                    </div>
+
+                    <div class="tip-card">
+                        <div class="tip-icon">🤝</div>
+                        <div class="tip-text">किसान समूह से जुड़ें, बेहतर मूल्य पाएँ / Join farmer group for better
+                            prices</div>
+                    </div>
+
+                    <div class="tip-card">
+                        <div class="tip-icon">📞</div>
+                        <div class="tip-text">किसी भी समस्या पर अपने बैंक से बात करें / Talk to bank for any issues
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION 7: ACTION BUTTONS ===== -->
+            <div style="margin: 3rem 0; text-align: center;">
+                <div class="action-buttons">
+                    <a href="/agriflow/apply" class="btn-primary">🔁 फिर से जांचें / Check Again</a>
+                    <a href="tel:+919876543210" class="btn-secondary">📞 सलाहकार से बात करें / Talk to Advisor</a>
+                </div>
+            </div>
+
+            <!-- Final Message -->
+            <div
+                style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 2rem; border-radius: 1.5rem; text-align: center; margin: 2rem 0;">
+                <p style="font-size: 1.1rem; color: #1b5e20; font-weight: 600;">
+                    ✅ आपकी ऋण योजना तैयार है! / Your loan plan is ready!
+                </p>
+                <p style="font-size: 1rem; color: #333; margin-top: 0.5rem;">
+                    अब अपने नजदीकी बैंक में जाएँ और आवेदन करें / Visit your nearest bank and apply now
+                </p>
+            </div>
+
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+  <div class="footer-content">
+    <h3>🌾 AgriFlow</h3>
+    <p>Smart Loan Planning for Indian Farmers</p>
+    <p>© 2025 AgriFlow | Team Innovengers | HACKSAGON</p>
+    <div class="footer-bottom">
+      <p>💚 Built with love for farming communities</p>
+    </div>
+  </div>
+</footer>
+
+
+            <script src="/js/agriflow.js"></script>
+            <script>
+                // Initialize chart when page loads
+                document.addEventListener('DOMContentLoaded', function () {
+                    const incomeDataElement = document.querySelector('[data-income-months]');
+                    if (incomeDataElement) {
+                        const incomeData = JSON.parse(incomeDataElement.dataset.incomeMonths);
+                        initIncomeChart(incomeData);
+                    }
+
+                    // Animate progress bar
+                    const progressFill = document.querySelector('.progress-fill');
+                    if (progressFill) {
+                        const targetWidth = parseFloat(progressFill.style.width);
+                        progressFill.style.width = '0%';
+                        setTimeout(() => {
+                            progressFill.style.transition = 'width 1s ease-out';
+                            progressFill.style.width = targetWidth + '%';
+                        }, 100);
+                    }
+                });
+            </script>
+</body>
+
+</html>

@@ -63,37 +63,156 @@
                                     financial advisor first.</p>
                                 <% } %>
                 </div>
+
+                <hr style="margin: 1.5rem 0; border: none; border-top: 2px solid rgba(0,0,0,0.1);">
+
+                <!-- Risk Breakdown - FIXED READABILITY -->
+                <div
+                    style="background: #f5f5f5; padding: 1.5rem; border-radius: 0.75rem; margin-top: 1rem; border: 2px solid #ddd;">
+                    <h4 style="color: #333; margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 600;">📊 जोखिम की
+                        गणना / Risk Calculation Breakdown:</h4>
+
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; color: #333; font-size: 0.95rem;">
+                        <!-- Factor 1: EMI Burden (Most Important) -->
+                        <div
+                            style="background: #fff9f0; padding: 1.25rem; border-radius: 0.5rem; border-left: 5px solid #ff6b6b; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <p style="margin: 0 0 0.75rem 0; font-weight: 600; color: #d32f2f; font-size: 1rem;">
+                                <strong>⚠️ EMI का बोझ / EMI Burden</strong>
+                            </p>
+                            <p style="margin: 0.4rem 0; font-size: 0.95rem; color: #555;">
+                                <strong>बदतर महीना / Worst:</strong> <span
+                                    style="color: #d32f2f; font-weight: 700; font-size: 1.1rem;">
+                                    <%= farmer.emiPercentageWorst %>%
+                                </span>
+                            </p>
+                            <p style="margin: 0.4rem 0; font-size: 0.95rem; color: #555;">
+                                <strong>औसत / Average:</strong> <span style="color: #f57c00; font-weight: 600;">
+                                    <%= farmer.emiPercentageAvg %>%
+                                </span>
+                            </p>
+                            <p style="margin-top: 0.75rem; font-size: 0.85rem; color: #666; font-style: italic;">
+                                <% if (farmer.emiPercentageWorst> 50) { %>
+                                    ❌ बहुत ज्यादा जोखिम / Very High Risk
+                                    <% } else if (farmer.emiPercentageWorst> 40) { %>
+                                        ❌ ज्यादा जोखिम / High Risk
+                                        <% } else if (farmer.emiPercentageWorst> 30) { %>
+                                            ⚡ माध्यम जोखिम / Medium Risk
+                                            <% } else if (farmer.emiPercentageWorst> 20) { %>
+                                                ✅ कम-माध्यम जोखिम / Low-Medium Risk
+                                                <% } else { %>
+                                                    ✅ कम जोखिम / Low Risk
+                                                    <% } %>
+                            </p>
+                        </div>
+
+                        <!-- Factor 2: Loan-to-Land Ratio -->
+                        <div
+                            style="background: #f0f9ff; padding: 1.25rem; border-radius: 0.5rem; border-left: 5px solid #4ecdc4; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <p style="margin: 0 0 0.75rem 0; font-weight: 600; color: #00838f; font-size: 1rem;">
+                                <strong>🏡 ऋण-भूमि अनुपात / Loan-to-Land</strong>
+                            </p>
+                            <p style="margin: 0.4rem 0; font-size: 0.95rem; color: #555;">
+                                <strong>प्रति एकड़ / Per Acre:</strong> <span
+                                    style="color: #00838f; font-weight: 700; font-size: 1.1rem;">
+                                    ₹<%= (farmer.loan / farmer.land).toLocaleString() %>
+                                </span>
+                            </p>
+                            <p style="margin: 0.4rem 0; font-size: 0.95rem; color: #555;">
+                                <strong>मासिक EMI / Monthly:</strong> <span style="color: #2e7d32; font-weight: 600;">
+                                    ₹<%= farmer.monthlyEMI.toLocaleString() %>
+                                </span>
+                            </p>
+                            <p style="margin-top: 0.75rem; font-size: 0.85rem; color: #666;">
+                                ✅ ₹50,000/एकड़ तक सुरक्षित / Up to ₹50K/acre safe
+                            </p>
+                        </div>
+
+                        <!-- Income Details -->
+                        <div
+                            style="background: #f0fdf4; padding: 1.25rem; border-radius: 0.5rem; border-left: 5px solid #95e1d3; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <p style="margin: 0 0 0.75rem 0; font-weight: 600; color: #2e7d32; font-size: 1rem;">
+                                <strong>💰 आय विवरण / Income</strong>
+                            </p>
+                            <p style="margin: 0.4rem 0; font-size: 0.95rem; color: #555;">
+                                <strong>औसत आय / Average:</strong> <span
+                                    style="color: #2e7d32; font-weight: 700; font-size: 1.1rem;">
+                                    ₹<%= farmer.averageMonthlyIncome.toLocaleString() %>
+                                </span>
+                            </p>
+                            <p style="margin: 0.4rem 0; font-size: 0.95rem; color: #555;">
+                                <strong>न्यूनतम आय / Minimum:</strong> <span style="color: #f57c00; font-weight: 600;">
+                                    ₹<%= farmer.lowestIncome.toLocaleString() %>
+                                </span>
+                            </p>
+                            <p style="margin-top: 0.75rem; font-size: 0.85rem; color: #666;">
+                                मौसमी भिन्नता के साथ / With seasonal variation
+                            </p>
+                        </div>
+
+                        <!-- Risk Level Guide -->
+                        <div
+                            style="background: #f5f5f5; padding: 1.25rem; border-radius: 0.5rem; border-left: 5px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <p style="margin: 0 0 0.75rem 0; font-weight: 600; color: #667eea; font-size: 1rem;">
+                                <strong>📈 जोखिम स्तर / Risk Levels</strong>
+                            </p>
+                            <p style="margin: 0.4rem 0; font-size: 0.9rem; color: #555;">
+                                <strong>✅ कम / Low:</strong> <span style="color: #2e7d32;">0-40</span>
+                            </p>
+                            <p style="margin: 0.4rem 0; font-size: 0.9rem; color: #555;">
+                                <strong>⚡ माध्यम / Medium:</strong> <span style="color: #f57c00;">40-65</span>
+                            </p>
+                            <p style="margin: 0.4rem 0; font-size: 0.9rem; color: #555;">
+                                <strong>⚠️ उच्च / High:</strong> <span style="color: #d32f2f;">65-100</span>
+                            </p>
+                            <p style="margin-top: 0.75rem; font-size: 0.85rem; color: #666; font-weight: 600;">
+                                आपका स्कोर / Your Score: <span style="font-size: 1.1rem; color: #667eea;">
+                                    <%= farmer.riskScore %>
+                                </span>/100
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- ===== SECTION 3: INFO CARDS ===== -->
-            <div class="info-cards-grid">
-                <!-- Card 1: Monthly EMI -->
-                <div class="info-card fade-in">
-                    <div class="info-icon">📅</div>
-                    <div class="info-value">₹<%= farmer.monthlyEMI.toLocaleString() %>
+            <!-- ===== SECTION 3.5: EMI EXPLANATION ===== -->
+            <div class="info-card fade-in"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; grid-column: 1/4; padding: 2rem;">
+                <h3 style="color: white; margin-bottom: 1rem;">📊 कैसे EMI की गणना की गई है? / How is EMI Calculated?
+                </h3>
+                <div style="font-size: 1.1rem; line-height: 1.8;">
+                    <p><strong>सूत्र / Formula:</strong></p>
+                    <p
+                        style="background: rgba(255,255,255,0.15); padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; border-left: 4px solid #ffeb3b;">
+                        <strong>EMI = कुल ऋण ÷ महीनों की संख्या</strong><br>
+                        EMI = ₹<%= farmer.loan.toLocaleString() %> ÷ <%= farmer.durationMonths %> महीने = <strong
+                                    style="font-size: 1.3rem; color: #ffeb3b;">₹<%= farmer.monthlyEMI.toLocaleString()
+                                        %>/महीना</strong>
+                    </p>
+                    <p style="margin-top: 1rem;"><strong>मुख्य जानकारी / Key Information:</strong></p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>कुल राशि (मूल + ब्याज) / Total (Principal + Interest): <strong style="color: #c8e6c9;">₹<%=
+                                    farmer.totalAmount.toLocaleString() %></strong></li>
+                        <li>अनुमानित ब्याज (10% p.a.) / Estimated Interest: <strong style="color: #c8e6c9;">₹<%=
+                                    farmer.totalInterest.toLocaleString() %></strong></li>
+                        <li>अवधि लाभ / Duration Benefit: <strong style="color: #90ee90;">
+                                <%= farmer.durationDiscount %>% छूट = कम जोखिम
+                            </strong></li>
+                        <li>प्रतिशत = (EMI ÷ आपकी आय) × 100 / Percentage = (EMI ÷ Your Income) × 100</li>
+                    </ul>
+                    <div
+                        style="background: rgba(144, 238, 144, 0.1); padding: 1rem; margin-top: 1rem; border-radius: 0.5rem; border-left: 4px solid #90ee90;">
+                        <p style="margin: 0; font-size: 0.95rem; color: #c8e6c9;">
+                            💡 <strong>टिप्पणी:</strong> लंबी अवधि के ऋण सुरक्षित हैं - 36 महीने तक 40% जोखिम में कमी
+                            पाएँ!
+                            <br>
+                            <strong>Note:</strong> Longer loans are safer - Get up to 40% risk reduction for 36 months!
+                        </p>
                     </div>
-                    <div class="info-label">प्रस्तावित मासिक EMI / Suggested EMI</div>
-                    <div class="info-helper">यह आपकी आय के अनुसार सुविधाजनक है</div>
-                </div>
-
-                <!-- Card 2: Best Sell Month -->
-                <div class="info-card fade-in">
-                    <div class="info-icon">📈</div>
-                    <div class="info-value">
-                        <%= farmer.bestSellMonth %>
-                    </div>
-                    <div class="info-label">फसल बेचने का सर्वोत्तम समय / Best Sell Month</div>
-                    <div class="info-helper">इस महीने में आपको सर्वोच्च कीमत मिलेगी</div>
-                </div>
-
-                <!-- Card 3: Loan Status -->
-                <div class="info-card fade-in">
-                    <div class="info-icon">✅</div>
-                    <div class="info-value">मंजूर!</div>
-                    <div class="info-label">ऋण पात्रता / Loan Eligibility</div>
-                    <div class="info-helper">आप ₹<%= farmer.loan.toLocaleString() %> के ऋण के लिए योग्य हैं</div>
                 </div>
             </div>
+
+            <!-- ===== SECTION 3.6: INFO CARDS REPEATED (IF NEEDED) ===== -->
 
             <!-- ===== SECTION 4: INCOME CHART ===== -->
             <div class="chart-container fade-in" data-income-months="<%= JSON.stringify(farmer.monthlyIncome) %>">
@@ -104,7 +223,15 @@
 
             <!-- ===== SECTION 5: EMI TABLE ===== -->
             <div class="emi-table-container fade-in">
-                <h3 class="emi-table-title">📅 आपकी EMI योजना / Your EMI Plan (12 Months)</h3>
+                <h3 class="emi-table-title">📅 आपकी EMI योजना / Your EMI Plan
+                    <span style="color: #667eea; font-size: 0.9rem;">(<%= farmer.durationMonths %> Months - <%=
+                                farmer.durationDiscount %>% Safe)</span>
+                </h3>
+                <p style="color: #666; font-size: 0.95rem; margin-bottom: 1rem;">
+                    ✅ <%= farmer.durationMonths %>-महीने की अवधि में कम जोखिम / <%= farmer.durationMonths %>-month loan
+                            reduces risk by <%= farmer.durationDiscount %>%<br>
+                                ✅ यह तालिका आपके <%= farmer.durationMonths %> महीने की ऋण अवधि के लिए EMI दिखाती है।
+                </p>
                 <table class="emi-table">
                     <thead>
                         <tr>
@@ -119,7 +246,7 @@
                         <% farmer.emiPlan.forEach(plan=> { %>
                             <tr>
                                 <td><strong>
-                                        <%= plan.monthEng %>
+                                        <%= plan.monthEng %> (Month <%= plan.monthNumber %>)
                                     </strong></td>
                                 <td>₹<%= plan.income.toLocaleString() %>
                                 </td>
@@ -139,12 +266,27 @@
                                 </td>
                             </tr>
                             <% }); %>
+                                <% if (farmer.emiPlan.totalMonths && farmer.emiPlan.totalMonths> 12) { %>
+                                    <tr style="background: #f0f0f0; font-weight: bold;">
+                                        <td colspan="5" style="text-align: center; padding: 1.5rem;">
+                                            ... और <%= farmer.emiPlan.remainingMonths %> महीने अधिक / + <%=
+                                                    farmer.emiPlan.remainingMonths %> more months ...
+                                        </td>
+                                    </tr>
+                                    <% } %>
                     </tbody>
                 </table>
                 <div
-                    style="background: #f9f9f9; padding: 1rem; margin-top: 1rem; border-radius: 0.75rem; font-size: 0.95rem; color: #666;">
-                    <p>💡 <strong>नियम:</strong> EMI आपकी आय का 30% से कम होना चाहिए। / EMI should be less than 30% of
-                        your income.</p>
+                    style="background: #f9f9f9; padding: 1.5rem; margin-top: 1rem; border-radius: 0.75rem; border-left: 4px solid #4caf50;">
+                    <p style="margin: 0 0 0.75rem 0; font-size: 0.95rem; color: #1b5e20;"><strong>💡 सुरक्षा के नियम /
+                            Safety Rules:</strong></p>
+                    <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #2e7d32;">✅ EMI आपकी आय का <strong>30% से
+                            कम</strong> होना चाहिए। / EMI should be <strong>less than 30%</strong> of your income.</p>
+                    <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #d32f2f;">❌ यदि EMI <strong>40% से
+                            अधिक</strong> है, तो यह जोखिम भरा है। / If EMI is <strong>more than 40%</strong>, it's
+                        risky.</p>
+                    <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #f57c00;">⚡ <strong>30-40%</strong> के बीच
+                        सावधानी बरतें। / Between 30-40%, proceed with caution.</p>
                 </div>
             </div>
 
