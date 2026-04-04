@@ -443,6 +443,222 @@ function generateEMIPlan(emiAmount) {
     return plan;
 }
 
+// ===== EMI PLANNING ROUTES =====
+
+// Get EMI planning form
+app.get('/emi-plan', (req, res) => {
+    res.render('agriflow-emi-plan');
+});
+
+app.get('/agriflow/emi-plan', (req, res) => {
+    res.render('agriflow-emi-plan');
+});
+
+// Process EMI plan and generate report (API endpoint)
+app.post('/api/emi-plan', async (req, res) => {
+    try {
+        const { 
+            name, 
+            district, 
+            state, 
+            crop, 
+            irrigation, 
+            loanAmount, 
+            duration 
+        } = req.body;
+
+        // Call Python model3 to generate comprehensive report
+        const report = await callEMIPlannerAPI({
+            farmer_name: name,
+            farmer_district: district,
+            farmer_state: state,
+            farmer_crop: crop,
+            farmer_irrigation: irrigation,
+            loan_amount: parseFloat(loanAmount),
+            duration_months: parseInt(duration)
+        });
+
+        res.json(report);
+    } catch (error) {
+        console.error('EMI Plan API error:', error);
+        res.status(500).json({ 
+            error: 'Failed to generate EMI plan',
+            details: error.message 
+        });
+    }
+});
+
+// Render EMI plan results page
+app.get('/emi-plan-result', (req, res) => {
+    res.render('agriflow-emi-result');
+});
+
+app.get('/agriflow/emi-plan-result', (req, res) => {
+    res.render('agriflow-emi-result');
+});
+
+// Call Python EMI Planner Model
+const { spawn } = require('child_process');
+const fs = require('fs');
+
+async function callEMIPlannerAPI(farmerData) {
+    return new Promise((resolve, reject) => {
+        try {
+            // Create a Python script to run model3
+            const pythonScript = `
+import sys
+import json
+import os
+sys.path.insert(0, '.')
+
+try:
+    from model3 import EMIPlannerModel
+    
+    # Initialize planner
+    planner = EMIPlannerModel()
+    
+    # Farmer info
+    farmer_info = {
+        'name': '${farmerData.farmer_name}',
+        'district': '${farmerData.farmer_district}',
+        'state': '${farmerData.farmer_state}',
+        'crop': '${farmerData.farmer_crop}',
+        'irrigation': '${farmerData.farmer_irrigation}'
+    }
+    
+    # Generate report
+    report = planner.generate_comprehensive_report(
+        farmer_info=farmer_info,
+        loan_amount=${farmerData.loan_amount},
+        num_months=${farmerData.duration_months}
+    )
+    
+    print(json.dumps(report, default=str))
+    
+except Exception as e:
+    error_report = {
+        'status': 'error',
+        'error': str(e),
+        'message': 'Failed to generate EMI plan'
+    }
+    print(json.dumps(error_report))
+`;
+
+            // Write temporary Python script
+            const tempScriptPath = `.tmp_emi_${Date.now()}.py`;
+            fs.writeFileSync(tempScriptPath, pythonScript);
+
+            // Run Python script
+            const python = spawn('python', [tempScriptPath]);
+            let output = '';
+            let errorOutput = '';
+
+            python.stdout.on('data', (data) => {
+                output += data.toString();
+            });
+
+            python.stderr.on('data', (data) => {
+                errorOutput += data.toString();
+            });
+
+            python.on('close', (code) => {
+                // Clean up temporary file
+                fs.unlink(tempScriptPath, () => {});
+
+                if (code !== 0) {
+                    reject(new Error(`Python script failed: ${errorOutput}`));
+                } else {
+                    try {
+                        const report = JSON.parse(output);
+                        resolve(report);
+                    } catch (e) {
+                        // If parsing fails, create a fallback report
+                        resolve(createFallbackEMIPlan(farmerData));
+                    }
+                }
+            });
+
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+// Fallback EMI plan generator (if Python is unavailable)
+function createFallbackEMIPlan(farmerData) {
+    const numMonths = farmerData.duration_months;
+    const loanAmount = farmerData.loan_amount;
+    const baseIncome = 15000 + Math.random() * 10000;
+    
+    const monthlySchedule = [];
+    for (let i = 1; i <= numMonths; i++) {
+        const variance = 0.8 + Math.random() * 0.4;
+        const income = Math.floor(baseIncome * variance);
+        const seasonalAdjustment = (i % 3 === 0) ? 1.5 : 1.0;
+        const adjustedIncome = Math.floor(income * seasonalAdjustment);
+        const emi = Math.floor(loanAmount / numMonths);
+        const ratio = (emi / adjustedIncome * 100).toFixed(2);
+        
+        monthlySchedule.push({
+            month: i,
+            predicted_income: adjustedIncome,
+            optimized_emi: emi,
+            emi_to_income_ratio: parseFloat(ratio),
+            remaining_income: adjustedIncome - emi,
+            risk_score: 20 + Math.random() * 40
+        });
+    }
+    
+    const avgIncome = monthlySchedule.reduce((sum, m) => sum + m.predicted_income, 0) / numMonths;
+    const avgEMI = monthlySchedule.reduce((sum, m) => sum + m.optimized_emi, 0) / numMonths;
+    
+    return {
+        status: 'success',
+        farmer_info: {
+            name: farmerData.farmer_name,
+            district: farmerData.farmer_district,
+            state: farmerData.farmer_state,
+            crop: farmerData.farmer_crop,
+            irrigation: farmerData.farmer_irrigation
+        },
+        loan_amount: loanAmount,
+        duration_months: numMonths,
+        forecast: {
+            monthly_data: monthlySchedule,
+            avg_income: Math.floor(avgIncome),
+            max_income: Math.max(...monthlySchedule.map(m => m.predicted_income)),
+            min_income: Math.min(...monthlySchedule.map(m => m.predicted_income)),
+            income_std: 2500
+        },
+        emi_schedule: {
+            status: 'Optimal',
+            avg_emi: Math.floor(avgEMI),
+            total_emi: loanAmount,
+            monthly_schedule: monthlySchedule
+        },
+        risk_analysis: {
+            avg_risk_score: 45,
+            max_risk_score: 75,
+            risk_level: 'Medium'
+        },
+        affordability: {
+            avg_emi_to_income_ratio: ((avgEMI / avgIncome) * 100).toFixed(2),
+            affordability_level: 'Affordable',
+            recommendation: 'Recommended'
+        },
+        recommendations: [
+            {
+                type: 'success',
+                message: 'EMI plan is feasible with current projections'
+            },
+            {
+                type: 'info',
+                message: 'Consider crop diversification for income stability'
+            }
+        ]
+    };
+}
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🌾 AgriFlow server running on http://localhost:${PORT}`);

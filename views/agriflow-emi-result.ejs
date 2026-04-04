@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI Plan Report - AgriFlow</title>
+    <link rel="stylesheet" href="/css/agriflow.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+        }
+
+        .report-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header-content p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-pdf {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-pdf:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-share {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-share:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .report-content {
+            padding: 40px;
+        }
+
+        .status-banner {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-banner.warning {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+
+        .status-banner.error {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+
+        .status-icon {
+            font-size: 32px;
+        }
+
+        .status-text h3 {
+            margin-bottom: 5px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-title {
+            font-size: 13px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .card-subtext {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 30px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .small-chart-container {
+            position: relative;
+            height: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-warning {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-danger {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .affordability-meter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .meter-bar {
+            flex: 1;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #ff9800, #f44336);
+            transition: width 0.3s ease;
+        }
+
+        .meter-label {
+            font-weight: 600;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        .recommendations {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .recommendation-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .recommendation-item.warning {
+            border-left-color: #ff9800;
+        }
+
+        .recommendation-item.danger {
+            border-left-color: #f44336;
+        }
+
+        .recommendation-item.success {
+            border-left-color: #4caf50;
+        }
+
+        .rec-icon {
+            font-size: 24px;
+            min-width: 30px;
+        }
+
+        .rec-content p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .rec-content h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .footer-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            padding: 30px 40px;
+            border-top: 2px solid #f0f0f0;
+            background: #f9f9f9;
+        }
+
+        .btn-large {
+            padding: 14px 40px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media print {
+            .report-header,
+            .header-actions,
+            .footer-actions,
+            .btn {
+                display: none;
+            }
+
+            .report-container {
+                box-shadow: none;
+                margin: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .report-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+                margin-top: 15px;
+            }
+
+            .chart-row {
+                grid-template-columns: 1fr;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .report-content {
+                padding: 20px;
+            }
+
+            .footer-actions {
+                flex-direction: column;
+            }
+
+            .btn-large {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('partials/navbar-agriflow') %>
+
+    <div class="report-container" id="reportContainer">
+        <div class="report-header">
+            <div class="header-content">
+                <h1>📊 EMI Planning Report</h1>
+                <p id="reportDate">Generated on loading...</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-pdf" onclick="downloadPDF()">📥 Download PDF</button>
+                <button class="btn btn-share" onclick="shareReport()">📤 Share</button>
+            </div>
+        </div>
+
+        <div class="report-content" id="reportContent">
+            <div style="text-align: center; padding: 40px;">
+                <div style="border: 4px solid #667eea; border-top-color: transparent; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                <p style="color: #999; margin-top: 20px;">Loading report data...</p>
+            </div>
+        </div>
+
+        <div class="footer-actions">
+            <button class="btn-large btn-primary" onclick="window.print()">🖨️ Print Report</button>
+            <button class="btn-large btn-secondary" onclick="window.location.href='/emi-plan'">← Create New Plan</button>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+    <script>
+        let reportData = null;
+
+        // Load report from session storage
+        function loadReportData() {
+            const stored = sessionStorage.getItem('emiReport');
+            if (stored) {
+                reportData = JSON.parse(stored);
+                renderReport();
+                sessionStorage.removeItem('emiReport'); // Clear after loading
+            } else {
+                // If no data, try to get from an API or redirect
+                document.getElementById('reportContent').innerHTML = '<p style="color: red; text-align: center;">No report data found. <a href="/emi-plan">Create a new plan</a></p>';
+            }
+        }
+
+        // Render the complete report
+        function renderReport() {
+            if (!reportData) return;
+
+            const farmer = reportData.farmer_info || {};
+            const forecast = reportData.forecast || {};
+            const emiSchedule = reportData.emi_schedule || {};
+            const risk = reportData.risk_analysis || {};
+            const affordability = reportData.affordability || {};
+            const recommendations = reportData.recommendations || [];
+
+            let html = `
+                ${renderStatusBanner(reportData.status)}
+                
+                <div class="section">
+                    <h2 class="section-title">👨‍🌾 Farmer Information</h2>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-title">Name</div>
+                            <div class="card-value">${farmer.name || 'N/A'}</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">District</div>
+                            <div class="card-value">${farmer.district || 'N/A'}</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Crop</div>
+                            <div class="card-value">${farmer.crop || 'N/A'}</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Irrigation</div>
+                            <div class="card-value">${farmer.irrigation || 'N/A'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">💰 Loan Summary</h2>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-title">Loan Amount</div>
+                            <div class="card-value">₹${(reportData.loan_amount || 0).toLocaleString()}</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Duration</div>
+                            <div class="card-value">${reportData.duration_months || 12} months</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Total EMI</div>
+                            <div class="card-value">₹${(emiSchedule.total_emi || 0).toLocaleString()}</div>
+                            <div class="card-subtext">Avg: ₹${(emiSchedule.avg_emi || 0).toLocaleString()}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">📈 Income Analysis</h2>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-title">Average Monthly Income</div>
+                            <div class="card-value">₹${(forecast.avg_income || 0).toLocaleString()}</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Maximum Income</div>
+                            <div class="card-value">₹${(forecast.max_income || 0).toLocaleString()}</div>
+                            <div class="card-subtext" style="color: #4caf50;">Peak period</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Minimum Income</div>
+                            <div class="card-value">₹${(forecast.min_income || 0).toLocaleString()}</div>
+                            <div class="card-subtext" style="color: #ff9800;">Off-season</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Income Volatility</div>
+                            <div class="card-value">₹${(forecast.income_std || 0).toLocaleString()}</div>
+                            <div class="card-subtext">Standard deviation</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="incomeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">💳 EMI Schedule</h2>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-title">EMI Status</div>
+                            <div class="card-value">${emiSchedule.status === 'Optimal' ? '✅ Optimal' : '⚠️ Warning'}</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Affordability</div>
+                            <div class="card-value">${affordability.affordability_level || 'N/A'}</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Avg EMI to Income</div>
+                            <div class="card-value">${(affordability.avg_emi_to_income_ratio || 0).toFixed(1)}%</div>
+                            <div class="card-subtext">
+                                <span class="badge ${affordability.avg_emi_to_income_ratio > 40 ? 'badge-danger' : 'badge-success'}">
+                                    ${affordability.avg_emi_to_income_ratio > 40 ? 'High Burden' : 'Manageable'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-row">
+                        <div class="small-chart-container">
+                            <canvas id="emiVsIncomeChart"></canvas>
+                        </div>
+                        <div class="small-chart-container">
+                            <canvas id="emiRatioChart"></canvas>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 30px; margin-bottom: 15px; color: #333;">Monthly EMI Schedule</h3>
+                    <div class="table-container">
+                        <table id="emiTable">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Predicted Income</th>
+                                    <th>Optimized EMI</th>
+                                    <th>EMI %</th>
+                                    <th>Remaining Income</th>
+                                    <th>Risk Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="emiTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">⚠️ Risk Analysis</h2>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-title">Average Risk Score</div>
+                            <div class="card-value">${(risk.avg_risk_score || 0).toFixed(1)}/100</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Maximum Risk</div>
+                            <div class="card-value">${(risk.max_risk_score || 0).toFixed(1)}/100</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Risk Level</div>
+                            <div class="card-value">${risk.risk_level || 'N/A'}</div>
+                            <div class="card-subtext">
+                                <span class="badge ${risk.risk_level === 'Low' ? 'badge-success' : risk.risk_level === 'Medium' ? 'badge-warning' : 'badge-danger'}">
+                                    ${risk.risk_level}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="riskChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">📋 Recommendations</h2>
+                    <div class="recommendations">
+                        ${recommendations.map(rec => `
+                            <div class="recommendation-item ${rec.type}">
+                                <div class="rec-icon">
+                                    ${rec.type === 'success' ? '✅' : rec.type === 'warning' ? '⚠️' : rec.type === 'critical' ? '🚨' : 'ℹ️'}
+                                </div>
+                                <div class="rec-content">
+                                    <h4>${capitalizeFirst(rec.type)}</h4>
+                                    <p>${rec.message}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('reportContent').innerHTML = html;
+            document.getElementById('reportDate').textContent = `Generated on ${new Date().toLocaleDateString()}`;
+
+            // Initialize charts
+            setTimeout(() => {
+                initCharts();
+                populateTable();
+            }, 100);
+        }
+
+        function renderStatusBanner(status) {
+            const statusConfig = {
+                'success': { icon: '✅', title: 'Plan Feasible', text: 'Your EMI plan is viable based on predicted income' },
+                'warning': { icon: '⚠️', title: 'Caution', text: 'Review the plan carefully. Some risk factors detected.' },
+                'error': { icon: '🚨', title: 'Not Feasible', text: 'Current loan parameters may not be suitable.' }
+            };
+
+            const config = statusConfig[status] || statusConfig['warning'];
+            const cssClass = status === 'error' ? 'error' : status === 'warning' ? 'warning' : '';
+
+            return `
+                <div class="status-banner ${cssClass}">
+                    <div class="status-icon">${config.icon}</div>
+                    <div class="status-text">
+                        <h3>${config.title}</h3>
+                        <p>${config.text}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initCharts() {
+            if (!reportData || !reportData.emi_schedule || !reportData.emi_schedule.monthly_schedule) return;
+
+            const schedule = reportData.emi_schedule.monthly_schedule;
+            const months = schedule.map(s => `Month ${s.month}`);
+            const incomes = schedule.map(s => s.predicted_income);
+            const emis = schedule.map(s => s.optimized_emi);
+            const ratios = schedule.map(s => s.emi_to_income_ratio);
+            const risks = schedule.map(s => s.risk_score);
+
+            // Income Chart
+            const incomeCtx = document.getElementById('incomeChart');
+            if (incomeCtx) {
+                new Chart(incomeCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'Predicted Monthly Income (₹)',
+                            data: incomes,
+                            backgroundColor: 'rgba(102, 126, 234, 0.6)',
+                            borderColor: '#667eea',
+                            borderWidth: 2,
+                            borderRadius: 8,
+                            categoryPercentage: 0.8,
+                            barPercentage: 0.9
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: true } },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { callback: v => '₹' + v.toLocaleString() }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // EMI vs Income Chart
+            const emiCtx = document.getElementById('emiVsIncomeChart');
+            if (emiCtx) {
+                new Chart(emiCtx, {
+                    type: 'line',
+                    data: {
+                        labels: months,
+                        datasets: [
+                            {
+                                label: 'Income',
+                                data: incomes,
+                                borderColor: '#4caf50',
+                                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'EMI',
+                                data: emis,
+                                borderColor: '#f44336',
+                                backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: true } },
+                        scales: { y: { beginAtZero: true, ticks: { callback: v => '₹' + v.toLocaleString() } } }
+                    }
+                });
+            }
+
+            // EMI Ratio Chart
+            const ratioCtx = document.getElementById('emiRatioChart');
+            if (ratioCtx) {
+                const colors = ratios.map(r => r > 40 ? '#f44336' : r > 30 ? '#ff9800' : '#4caf50');
+                new Chart(ratioCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'EMI to Income Ratio (%)',
+                            data: ratios,
+                            backgroundColor: colors,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { max: 100, ticks: { callback: v => v + '%' } } }
+                    }
+                });
+            }
+
+            // Risk Chart
+            const riskCtx = document.getElementById('riskChart');
+            if (riskCtx) {
+                new Chart(riskCtx, {
+                    type: 'line',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'Default Risk Score',
+                            data: risks,
+                            borderColor: '#ff9800',
+                            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#ff9800',
+                            pointRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: true } },
+                        scales: { y: { min: 0, max: 100, ticks: { callback: v => v.toFixed(0) } } }
+                    }
+                });
+            }
+        }
+
+        function populateTable() {
+            const tbody = document.getElementById('emiTableBody');
+            if (!reportData || !reportData.emi_schedule || !reportData.emi_schedule.monthly_schedule) return;
+
+            const schedule = reportData.emi_schedule.monthly_schedule;
+            tbody.innerHTML = schedule.map(s => `
+                <tr>
+                    <td><strong>Month ${s.month}</strong></td>
+                    <td>₹${s.predicted_income.toLocaleString()}</td>
+                    <td>₹${s.optimized_emi.toLocaleString()}</td>
+                    <td>
+                        <span class="badge ${s.emi_to_income_ratio > 40 ? 'badge-danger' : s.emi_to_income_ratio > 30 ? 'badge-warning' : 'badge-success'}">
+                            ${s.emi_to_income_ratio.toFixed(1)}%
+                        </span>
+                    </td>
+                    <td>₹${s.remaining_income.toLocaleString()}</td>
+                    <td>
+                        <span class="badge ${s.risk_score > 70 ? 'badge-danger' : s.risk_score > 40 ? 'badge-warning' : 'badge-success'}">
+                            ${s.risk_score.toFixed(0)}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('reportContainer');
+            const opt = {
+                margin: 10,
+                filename: `emi-report-${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function shareReport() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'EMI Planning Report',
+                    text: 'Check out my EMI planning report from AgriFlow!',
+                    url: window.location.href
+                });
+            } else {
+                alert('Share via URL: ' + window.location.href);
+            }
+        }
+
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Load report on page load
+        window.addEventListener('load', loadReportData);
+    </script>
+
+    <%- include('partials/footer-agriflow') %>
+</body>
+
+</html>
